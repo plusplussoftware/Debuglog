@@ -20,6 +20,7 @@ Debugfile::Debugfile(const char *filename, bool open_now)
    , m_timer(new Simple_timer)
    , m_bugfile()
    , m_padding(12)
+   , m_indent(1)
 {
    if (m_debug_on)
    {
@@ -84,10 +85,6 @@ void Debugfile::Close_file()
    }
 }
 
-//================
-//Access functions
-//================
-
 // Write
 // ------------------------------------------------------------------------------------------------
 void Debugfile::Write(const char *str, Debugfile::newline_type nl)
@@ -100,12 +97,12 @@ void Debugfile::Write(const char *str, Debugfile::newline_type nl)
       {
          Write_timestamp();
          Write_thread_ID();
+         m_bugfile << std::right << std::setw(static_cast<std::streamsize>(m_indent)) << ' ';
       }
-      m_bugfile << " " << str;
+      m_bugfile << str;
       Write_endline(nl);
    }
 }
-
 
 // Write_systemtime
 // ------------------------------------------------------------------------------------------------
@@ -119,7 +116,6 @@ void Debugfile::Write_systemtime()
 
 #pragma warning(default:4996)
 }
-
 
 // Write_endline
 // ------------------------------------------------------------------------------------------------
@@ -162,7 +158,8 @@ void Debugfile::Write_header()
 {
    m_bugfile << std::right << std::setw(m_padding) << "Elapsed_ms" <<
                               std::setw(m_padding) << "Thread_ID" <<
-                              std::left << " Log_message";
+                              std::right << std::setw(static_cast<std::streamsize>(m_indent)) << ' ' <<
+                              std::left << "Log_message";
    m_newline = false;
 
 #if defined USE_INCREMENTAL
@@ -185,4 +182,12 @@ void Debugfile::Reset()
 {
    Close_file();
    Open_file();
+}
+
+// ------------------------------------------------------------------------------------------------
+void Debugfile::Modify_indentation(const int spaces)
+{
+   m_indent += spaces;
+   if (m_indent < 1) 
+      m_indent = 1;
 }

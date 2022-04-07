@@ -54,8 +54,28 @@ public:
          {
             Write_timestamp();
             Write_thread_ID();
+            m_bugfile << std::right << std::setw(static_cast<std::streamsize>(m_indent)) << ' ';
          }
-         m_bugfile << " " << description << " " << value;
+         m_bugfile << description << " " << value;
+         Write_endline(nl);
+      }
+   }
+
+   template <>
+   void Write<bool>(const char *description, const bool& value, 
+                    newline_type nl)
+   {
+      std::lock_guard<std::mutex> file_lock(m_logger_mutex);
+
+      if (m_debug_on)
+      {
+         if (m_newline)
+         {
+            Write_timestamp();
+            Write_thread_ID();
+            m_bugfile << std::right << std::setw(static_cast<std::streamsize>(m_indent)) << ' ';
+         }
+         m_bugfile << " " << description << " " << (value ? "true" : "false");
          Write_endline(nl);
       }
    }
@@ -78,6 +98,7 @@ public:
          {
             Write_timestamp();
             Write_thread_ID();
+            m_bugfile << std::right << std::setw(static_cast<std::streamsize>(m_indent)) << ' ';
          }
          m_bugfile << description << " = ";
          for (auto i = vec.begin(); i != vec.end(); ++i)
@@ -113,6 +134,12 @@ public:
    /// @author    Tanaya Mankad 01/07/16
    // ---------------------------------------------------------------------------------------------
    void Reset();
+
+   // ---------------------------------------------------------------------------------------------
+   /// @brief     Indent or de-indent the log message
+   /// @author    Tanaya Mankad 04/07/22
+   // ---------------------------------------------------------------------------------------------
+   void Modify_indentation(const int spaces);
 
 private:
 
@@ -181,6 +208,7 @@ private:
    Simple_timer      *m_timer;
    std::mutex        m_logger_mutex;
    const int         m_padding;
+   int               m_indent;
 };
 
 // ================================================================================================
