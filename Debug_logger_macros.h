@@ -65,16 +65,8 @@ public:
       m_logger.Modify_indentation(-m_func_indent);
    }
 
-private:
-   // ---------------------------------------------------------------------------------------------
-   /// @brief     Copy constructor
-   // ---------------------------------------------------------------------------------------------
-   Logger_helper(const Logger_helper& c);
-
-   // ---------------------------------------------------------------------------------------------
-   /// @brief     Assignment
-   // ---------------------------------------------------------------------------------------------
-   Logger_helper& operator=(const Logger_helper& c);
+   Logger_helper(const Logger_helper& c) = delete;
+   Logger_helper& operator=(const Logger_helper& c) = delete;
 
    Debugfile&           m_logger;
    std::string          m_function_name;

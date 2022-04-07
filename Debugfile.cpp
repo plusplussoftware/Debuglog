@@ -6,11 +6,6 @@
 #include <ctime>
 #include <thread>
 
-//============================
-//Construction and destruction
-//============================
-
-// Constructor
 // ------------------------------------------------------------------------------------------------
 Debugfile::Debugfile(const char *filename, bool open_now)
    : m_filename(filename)
@@ -28,7 +23,6 @@ Debugfile::Debugfile(const char *filename, bool open_now)
    }
 }
 
-// Destructor
 // ------------------------------------------------------------------------------------------------
 Debugfile::~Debugfile()
 {
@@ -41,7 +35,6 @@ Debugfile::~Debugfile()
    }
 }
 
-// Turn_on_debug_file
 // ------------------------------------------------------------------------------------------------
 void Debugfile::Turn_on_debug_file(bool turn_on)
 {
@@ -55,7 +48,6 @@ void Debugfile::Turn_on_debug_file(bool turn_on)
    }
 }
 
-// Open_file
 // ------------------------------------------------------------------------------------------------
 void Debugfile::Open_file()
 {
@@ -72,7 +64,6 @@ void Debugfile::Open_file()
    }
 }
 
-// Close_file
 // ------------------------------------------------------------------------------------------------
 void Debugfile::Close_file()
 {
@@ -85,7 +76,6 @@ void Debugfile::Close_file()
    }
 }
 
-// Write
 // ------------------------------------------------------------------------------------------------
 void Debugfile::Write(const char *str, Debugfile::newline_type nl)
 {
@@ -104,7 +94,6 @@ void Debugfile::Write(const char *str, Debugfile::newline_type nl)
    }
 }
 
-// Write_systemtime
 // ------------------------------------------------------------------------------------------------
 void Debugfile::Write_systemtime()
 {
@@ -134,7 +123,6 @@ void Debugfile::Write_endline(Debugfile::newline_type newline)
 
 #define USE_INCREMENTAL
 
-// Write_timestamp
 // ------------------------------------------------------------------------------------------------
 void Debugfile::Write_timestamp()
 {
@@ -169,14 +157,12 @@ void Debugfile::Write_header()
 #endif
 }
 
-// Write_thread_ID
 // ------------------------------------------------------------------------------------------------
 void Debugfile::Write_thread_ID()
 {
    m_bugfile << std::right << std::setw(m_padding) << std::this_thread::get_id();
 }
 
-// Reset
 // ------------------------------------------------------------------------------------------------
 void Debugfile::Reset()
 {
