@@ -50,9 +50,12 @@ public:
 
       if (m_debug_on)
       {
-         Write_timestamp();
-         Write_thread_ID();
-         m_bugfile << description << " = " << value;
+         if (m_newline)
+         {
+            Write_timestamp();
+            Write_thread_ID();
+         }
+         m_bugfile << " " << description << " " << value;
          Write_endline(nl);
       }
    }
@@ -71,8 +74,11 @@ public:
 
       if (m_debug_on)
       {
-         Write_timestamp();
-         Write_thread_ID();
+         if (m_newline)
+         {
+            Write_timestamp();
+            Write_thread_ID();
+         }
          m_bugfile << description << " = ";
          for (auto i = vec.begin(); i != vec.end(); ++i)
          {
@@ -154,6 +160,14 @@ private:
    /// @author    Tanaya Mankad 11/06/02
    // ---------------------------------------------------------------------------------------------
    void Write_timestamp();
+
+   // ---------------------------------------------------------------------------------------------
+   // Write_header
+   // ---------------------------------------------------------------------------------------------
+   /// @brief     Writes the time in milliseconds to the file.
+   /// @author    Tanaya Mankad 11/06/02
+   // ---------------------------------------------------------------------------------------------
+   void Write_header();
 
    void Write_thread_ID();
 

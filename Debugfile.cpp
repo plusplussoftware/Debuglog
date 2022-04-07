@@ -19,7 +19,7 @@ Debugfile::Debugfile(const char *filename, bool open_now)
    , m_newline(false)
    , m_timer(new Simple_timer)
    , m_bugfile()
-   , m_padding(9)
+   , m_padding(12)
 {
    if (m_debug_on)
    {
@@ -65,6 +65,8 @@ void Debugfile::Open_file()
       {
          m_is_open = true;
          Write_systemtime();
+         Write_header();
+         Write_endline(Debugfile::newline_type::e_write_newline);
       }
    }
 }
@@ -94,9 +96,12 @@ void Debugfile::Write(const char *str, Debugfile::newline_type nl)
 
    if (m_debug_on)
    {
-      Write_timestamp();
-      Write_thread_ID();
-      m_bugfile << str;
+      if (m_newline)
+      {
+         Write_timestamp();
+         Write_thread_ID();
+      }
+      m_bugfile << " " << str;
       Write_endline(nl);
    }
 }
@@ -125,6 +130,10 @@ void Debugfile::Write_endline(Debugfile::newline_type newline)
       m_bugfile << std::endl;
       m_newline = true;
    }
+   else
+   {
+      m_newline = false;
+   }
 }
 
 #define USE_INCREMENTAL
@@ -133,18 +142,28 @@ void Debugfile::Write_endline(Debugfile::newline_type newline)
 // ------------------------------------------------------------------------------------------------
 void Debugfile::Write_timestamp()
 {
-   if (m_newline)
-   {
-      std::ios_base::fmtflags old_flags = m_bugfile.setf(std::ios::fixed, std::ios::floatfield);
-      std::streamsize old_p = m_bugfile.precision(2);
+   std::ios_base::fmtflags old_flags = m_bugfile.setf(std::ios::fixed, std::ios::floatfield);
+   std::streamsize old_p = m_bugfile.precision(2);
 
-      m_bugfile << std::right << std::setw(m_padding) << m_timer->Elapsed_ms() << " ";
+   m_bugfile << std::right << std::setw(m_padding) << m_timer->Elapsed_ms();
 
-      m_bugfile.setf(old_flags);
-      m_bugfile.precision(old_p); // "precision" doesn't appear to be sticky for all streams
+   m_bugfile.setf(old_flags);
+   m_bugfile.precision(old_p); // "precision" doesn't appear to be sticky for all streams
 
-      m_newline = false;
-   }
+#if defined USE_INCREMENTAL
+
+   m_timer->Reset_timer();
+
+#endif
+}
+
+// ------------------------------------------------------------------------------------------------
+void Debugfile::Write_header()
+{
+   m_bugfile << std::right << std::setw(m_padding) << "Elapsed_ms" <<
+                              std::setw(m_padding) << "Thread_ID" <<
+                              std::left << " Log_message";
+   m_newline = false;
 
 #if defined USE_INCREMENTAL
 
@@ -157,7 +176,7 @@ void Debugfile::Write_timestamp()
 // ------------------------------------------------------------------------------------------------
 void Debugfile::Write_thread_ID()
 {
-   m_bugfile << "(T" << std::this_thread::get_id() << ") ";
+   m_bugfile << std::right << std::setw(m_padding) << std::this_thread::get_id();
 }
 
 // Reset

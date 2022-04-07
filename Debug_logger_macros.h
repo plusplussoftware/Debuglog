@@ -11,8 +11,10 @@
 #define  G_LOG_EXTERN                  extern Debugfile g_log;
 #define  G_LOG_ENABLE                  g_log.Turn_on_debug_file(true);
 #define  G_LOG_DISABLE                 g_log.Turn_on_debug_file(false);
-#define  G_LOG_WRITE_VAR(var)          g_log.Write(#var, var);
-#define  G_LOG_WRITE_STR(msg)          g_log.Write(msg);
+#define  G_LOG_VAR(var)                g_log.Write(#var, var);
+#define  G_LOG_MSG(msg)                g_log.Write(msg);
+#define  G_LOG_MSG_NONL(msg)           g_log.Write(msg, Debugfile::newline_type::e_no_newline);
+#define  G_LOG_MSG_VAR(msg, var)       g_log.Write(msg, var);
 #define  G_LOG_FUNCTION                Logger_helper lh(__FUNCTION__);        // Put at absolute beginning of a function
 #define  G_LOG_RESET                   g_log.Reset();
 //#define  G_LOG_FUNCTION_RETURN(var)    Logger_helper lh(__FUNCTION__);        // This too
@@ -23,8 +25,9 @@
 #define  G_LOG_EXTERN
 #define  G_LOG_ENABLE 
 #define  G_LOG_DISABLE
-#define  G_LOG_WRITE_VAR(var)
-#define  G_LOG_WRITE_STR(msg)
+#define  G_LOG_VAR(var)
+#define  G_LOG_MSG(msg)
+#define  G_LOG_MSG_NONL(msg)
 #define  G_LOG_FUNCTION 
 #define  G_LOG_FUNCTION_RETURN(var)
 #define  G_LOG_RESET 
@@ -48,7 +51,7 @@ public:
       G_LOG_EXTERN
       std::stringstream ss;
       ss << "Entering  into --> " << m_function_name;
-      G_LOG_WRITE_STR(ss.str().c_str())
+      G_LOG_MSG(ss.str().c_str())
    }
 
    //// ---------------------------------------------------------------------------------------------
@@ -61,7 +64,7 @@ public:
    //   G_LOG_EXTERN
    //   std::stringstream ss;
    //   ss << "Entering  into --> " << m_function_name;
-   //   G_LOG_WRITE_STR(ss.str().c_str())
+   //   G_LOG_MSG(ss.str().c_str())
    //}
 
    // ---------------------------------------------------------------------------------------------
@@ -72,7 +75,7 @@ public:
       G_LOG_EXTERN
       std::stringstream ss;
       ss << "Returning from <-- " << m_function_name;
-      G_LOG_WRITE_STR(ss.str().c_str())
+      G_LOG_MSG(ss.str().c_str())
    }
 
 private:
