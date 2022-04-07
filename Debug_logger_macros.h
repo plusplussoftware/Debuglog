@@ -61,8 +61,8 @@ public:
    {
       std::stringstream ss;
       ss << "Returning from <-- " << m_function_name;
-      m_logger.Write(ss.str().c_str());
       m_logger.Modify_indentation(-m_func_indent);
+      m_logger.Write(ss.str().c_str());
    }
 
    Logger_helper(const Logger_helper& c) = delete;
