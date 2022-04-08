@@ -18,7 +18,7 @@
 #define  G_LOG_MSG_NONL(msg)           g_log.Write(msg, Debugfile::newline_type::e_no_newline);
 #define  G_LOG_MSG_VAR(msg, var)       g_log.Write(msg, var);
 #define  G_LOG_FUNCTION                std::stringstream ss; \
-                                       ss << "Entering into --> " << __FUNCTION__; \
+                                       ss << "Entering  --> " << __FUNCTION__; \
                                        G_LOG_MSG(ss.str().c_str()) \
                                        Logger_helper lh(g_log, __FUNCTION__); 
 #define  G_LOG_RESET                   g_log.Reset();
@@ -60,7 +60,7 @@ public:
    ~Logger_helper()
    {
       std::stringstream ss;
-      ss << "Returning from <-- " << m_function_name;
+      ss << "Returning <-- " << m_function_name;
       m_logger.Modify_indentation(-m_func_indent);
       m_logger.Write(ss.str().c_str());
    }

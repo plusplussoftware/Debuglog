@@ -94,6 +94,24 @@ void Debugfile::Write(const char *str, Debugfile::newline_type nl)
    }
 }
 
+void Debugfile::Write(const char *description, const void* value, 
+                      newline_type nl)
+{
+   std::lock_guard<std::mutex> file_lock(m_logger_mutex);
+
+   if (m_debug_on)
+   {
+      if (m_newline)
+      {
+         Write_timestamp();
+         Write_thread_ID();
+         m_bugfile << std::right << std::setw(static_cast<std::streamsize>(m_indent)) << ' ';
+      }
+      m_bugfile << " " << description << " " << value;
+      Write_endline(nl);
+   }
+}
+
 // ------------------------------------------------------------------------------------------------
 void Debugfile::Write_systemtime()
 {
