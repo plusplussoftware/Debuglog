@@ -22,7 +22,15 @@ public:
       e_no_newline    = false
    };
 
-   explicit Debugfile(const char *filename, bool open_now = true);
+   enum class timing_type : int
+   {
+      e_milli,
+      e_micro
+   };
+
+   explicit Debugfile(const char *filename, 
+                      bool open_now = true, 
+                      Debugfile::timing_type t_unit = Debugfile::timing_type::e_micro);
 
    ~Debugfile();
 
@@ -191,6 +199,7 @@ private:
    std::mutex        m_logger_mutex;
    const int         m_padding;
    int               m_indent;
+   timing_type       m_timing_unit;
 };
 
 // ================================================================================================

@@ -7,7 +7,7 @@
 #include <thread>
 
 // ------------------------------------------------------------------------------------------------
-Debugfile::Debugfile(const char *filename, bool open_now)
+Debugfile::Debugfile(const char *filename, bool open_now, Debugfile::timing_type t_unit)
    : m_filename(filename)
    , m_debug_on(open_now)
    , m_is_open(false)
@@ -16,6 +16,7 @@ Debugfile::Debugfile(const char *filename, bool open_now)
    , m_bugfile()
    , m_padding(12)
    , m_indent(1)
+   , m_timing_unit(t_unit)
 {
    if (m_debug_on)
    {
@@ -147,7 +148,8 @@ void Debugfile::Write_timestamp()
    std::ios_base::fmtflags old_flags = m_bugfile.setf(std::ios::fixed, std::ios::floatfield);
    std::streamsize old_p = m_bugfile.precision(2);
 
-   m_bugfile << std::right << std::setw(m_padding) << m_timer->Elapsed_ms();
+   m_bugfile << std::right << std::setw(m_padding) << 
+      ((m_timing_unit == timing_type::e_milli) ? m_timer->Elapsed_ms() : m_timer->Elapsed_us());
 
    m_bugfile.setf(old_flags);
    m_bugfile.precision(old_p); // "precision" doesn't appear to be sticky for all streams
@@ -162,7 +164,9 @@ void Debugfile::Write_timestamp()
 // ------------------------------------------------------------------------------------------------
 void Debugfile::Write_header()
 {
-   m_bugfile << std::right << std::setw(m_padding) << "Elapsed_ms" <<
+   m_bugfile << std::right << std::setw(m_padding) << 
+                              ((m_timing_unit == timing_type::e_milli) ? 
+                                 "Elapsed_ms" : "Elapsed_us") <<
                               std::setw(m_padding) << "Thread_ID" <<
                               std::right << std::setw(static_cast<std::streamsize>(m_indent)) << ' ' <<
                               std::left << "Log_message";
